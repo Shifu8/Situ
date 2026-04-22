@@ -1,0 +1,73 @@
+{% extends "./base.html" %}
+{% block title %} PASAJE {% endblock %}
+
+{% block body %}
+<center>
+    <article>
+        <p class="animate__animated animate__pulse animate__infinite"
+           style="font-family: 'Comic Sans MS', sans-serif; font-size: 50px; ">SITU</p><br>
+    </article>        
+</center>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h3>Nuevo Pasajero</h3>
+            <hr>
+            <form action="{% url 'pasajeros' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success w-100">Guardar Pasajero</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card p-3">
+            <h1>Listado de Pasajeros</h1>
+            <hr>
+            <div class="table-responsive py-2">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cedula</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Telefono</th>
+                            <th>Imagen</th>
+                            <th colspan="2">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in pasajeros %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{e.cedula}}</td>
+                            <td>{{e.nombre}}</td>
+                            <td>{{e.apellido}}</td>
+                            <td>{{e.telefono}}</td>
+                            <td>
+                                {% load static %}
+                                <img src="{% static 'logo.png' %}" alt="Imagen no encontrada" width="65" height="50"><br>
+                                <small>{{e.imagen}}</small>
+                            </td>
+                            <td>
+                                <a href="{% url 'pasajerosEdit' e.id %}" class="btn btn-info btn-sm">Editar</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'eliminar_pasajero' e.id %}" 
+                                   class="btn btn-danger btn-sm" 
+                                   onclick="return confirm('¿Seguro que deseas eliminar a {{e.nombre}}?')">
+                                   Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
